@@ -1,0 +1,55 @@
+Programa -> T_START_UML ListaDeclaracoes T_END_UML
+
+ListaDeclaracoes -> Declaracao
+
+ListaDeclaracoes -> Declaracao ListaDeclaracoes
+
+Declaracao -> DeclaracaoClasse
+
+Declaracao -> DeclaracaoRelacionamento T_NOVA_LINHA
+
+Declaracao -> T_NOVA_LINHA
+
+DeclaracaoClasse -> T_CLASS T_ID T_ABRE_CHAVE CorpoClasse T_FECHA_CHAVE 
+
+DeclaracaoClasse -> T_CLASS T_ID T_NOVA_LINHA (declaração simples) 
+
+CorpoClasse -> ListaMembros 
+
+CorpoClasse -> VAZIO (permite classe vazia {}) 
+
+ListaMembros -> Membro 
+
+ListaMembros -> Membro ListaMembros 
+
+Membro -> Atributo 
+
+Membro -> Metodo
+
+Atributo -> Visibilidade T_ID T_DOIS_PONTOS Tipo T_NOVA_LINHA (ex: - nome: String) 
+
+Atributo -> Visibilidade T_ID T_NOVA_LINHA (ex: - nome) 
+
+Metodo -> Visibilidade T_ID T_ABRE_PARENTESE ListaParams T_FECHA_PARENTESE OptTipoRetorno T_NOVA_LINHA (ex: + estudar(): void) 
+
+Visibilidade -> T_MAIS | T_MENOS | T_HASH | T_TIL | VAZIO 
+
+Tipo -> T_ID 
+
+OptTipoRetorno -> T_DOIS_PONTOS Tipo 
+
+OptTipoRetorno -> VAZIO 
+
+ListaParams -> VAZIO 
+
+ListaParams -> Parametros 
+
+Parametros -> T_ID T_DOIS_PONTOS Tipo (ex: nome: String) 
+
+Parametros -> Parametros T_VIRGULA Parametros (ex: id: int, nome: String)
+
+DeclaracaoRelacionamento -> T_ID Operador T_ID (ex: Aluno --* Turma) 
+
+DeclaracaoRelacionamento -> T_ID Operador T_ID T_DOIS_PONTOS T_STRING_LITERAL (ex: Aluno "1" --* "*" Turma : "contém") (Nota: Melhorei esta regra, a sintaxe do PlantUML é mais complexa, mas isso é um bom começo) 
+
+Operador -> T_HERANCA | T_IMPLEMENTACAO | T_ASSOCIACAO | T_AGREGACAO | T_COMPOSICAO | T_LINK
