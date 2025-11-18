@@ -1,0 +1,12 @@
+@startuml
+class Aluno {
+  - nome: String
+  + estudar()
+}
+
+Aluno -> Turma : "matriculado em"
+
+class Turma {
+  + codigo: int
+}
+@enduml

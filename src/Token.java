@@ -1,43 +1,20 @@
 public class Token {
     
-    public enum TipoToken {
-        // Palavras-chave
-        T_START_UML,
-        T_END_UML,
-        T_CLASS,
-        T_ABSTRACT,
-        T_STATIC,
+    public final TipoToken tipo;
+    public final String lexema;
+    public final int linha;
+    public final int coluna;
 
-        // Símbolos
-        T_OPEN_BRACE,       // {
-        T_CLOSE_BRACE,      // }
-        T_OPEN_PAREN,       // (
-        T_CLOSE_PAREN,      // )
-        T_SEMICOLON,        // ;
-        T_COLON,            // :
-        T_COMMA,            // ,
-
-        // Visibilidade
-        T_PUBLIC,           // +
-        T_PRIVATE,          // -
-        T_PROTECTED,        // #
-        T_PACKAGE,          // ~
-
-        // Relacionamentos
-        T_HERANCA,          // <|--
-        T_IMPLEMENTACAO,    // <|..
-        T_ASSOCIACAO,       // -->
-        T_AGREGACAO,        // o--
-        T_COMPOSICAO,       // *--
-        T_LINK,             // --
-
-        // Identificadores e Literais
-        T_ID,               // Identificador
-        T_SRING_LITERAL,    // "texto"
-
-        // Controle
-        T_NEWLINE,          // Quebra de linha
-        T_EOF               // Fim do arquivo
+    public Token(TipoToken tipo, String lexema, int linha, int coluna) {
+        this.tipo = tipo;
+        this.lexema = lexema;
+        this.linha = linha;
+        this.coluna = coluna;
     }
 
+    @Override
+    public String toString() {
+        return String.format("[Tipo: %-15s | Lexema: '%-10s' | Linha: %d Col: %d]",
+                tipo.name(), lexema, linha, coluna);
+    }
 }
