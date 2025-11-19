@@ -55,7 +55,7 @@ public class AnalisadorLexico {
         char c = avancar(); // Pega o caractere atual e avança o ponteiro
 
         switch (c) {
-            // --- SÍMBOLOS SIMPLES --- (Usando seus nomes de enum)
+            // --- SÍMBOLOS SIMPLES ---
             case '{': adicionarToken(TipoToken.T_OPEN_BRACE); break;
             case '}': adicionarToken(TipoToken.T_CLOSE_BRACE); break;
             case '(': adicionarToken(TipoToken.T_OPEN_PAREN); break;
@@ -69,16 +69,43 @@ public class AnalisadorLexico {
             // --- SÍMBOLOS DE MÚLTIPLOS CARACTERES ---
             case '-':
                 if (match('>')) {
-                    adicionarToken(TipoToken.T_ASSOCIACAO);
+                    adicionarToken(TipoToken.T_ASSOCIACAO, "-->"); // Corrigido
                 } else if (match('-')) { 
-                    adicionarToken(TipoToken.T_LINK);
+                    adicionarToken(TipoToken.T_LINK, "--"); // Corrigido
                 } else { 
-                    adicionarToken(TipoToken.T_PRIVATE); // Se for só '-', é private
+                    adicionarToken(TipoToken.T_PRIVATE);
                 }
                 break;
             
-            // TODO: Implementar os outros operadores compostos
-            // Ex: '<', '*', 'o'
+            case '<':
+                if (match('|')) {
+                    if (match('.')) {
+                        if (match('.')) {
+                            adicionarToken(TipoToken.T_IMPLEMENTACAO, "<|.."); // Adicionado
+                        }
+                    } else if (match('-')) {
+                        if (match('-')) {
+                            adicionarToken(TipoToken.T_HERANCA, "<|--"); // Adicionado
+                        }
+                    }
+                }
+                break;
+
+            case 'o':
+                if (match('-')) {
+                    if (match('-')) {
+                        adicionarToken(TipoToken.T_AGREGACAO, "o--"); // Adicionado
+                    }
+                }
+                break;
+
+            case '*':
+                if (match('-')) {
+                    if (match('-')) {
+                        adicionarToken(TipoToken.T_COMPOSICAO, "*--"); // Adicionado
+                    }
+                }
+                break;
 
             // --- IGNORAR ESPAÇOS EM BRANCO ---
             case ' ':
@@ -101,7 +128,7 @@ public class AnalisadorLexico {
 
             default:
                 // --- PALAVRAS-CHAVE E IDENTIFICADORES ---
-                if (isLetra(c) || c == '@') { // @startuml começa com @
+                if (isLetra(c) || c == '@') { 
                     identificador();
                 } 
                 // --- ERRO ---
@@ -145,7 +172,7 @@ public class AnalisadorLexico {
         if (tipo == null) {
             tipo = TipoToken.T_ID; // Se não for, é um ID
         }
-        adicionarToken(tipo);
+        adicionarToken(tipo, texto);
     }
     
     private void stringLiteral() {
