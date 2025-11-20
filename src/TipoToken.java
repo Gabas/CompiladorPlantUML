@@ -5,6 +5,7 @@ public enum TipoToken {
     T_CLASS,
     T_ABSTRACT,
     T_STATIC,
+    T_TITLE,
 
     // Símbolos
     T_OPEN_BRACE,       // {
@@ -14,6 +15,7 @@ public enum TipoToken {
     T_SEMICOLON,        // ;
     T_COLON,            // :
     T_COMMA,            // ,
+    T_GREATER,          // >
 
     // Visibilidade
     T_PUBLIC,           // +

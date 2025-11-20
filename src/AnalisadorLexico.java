@@ -22,6 +22,7 @@ public class AnalisadorLexico {
         palavrasChave.put("@enduml",   TipoToken.T_END_UML);
         palavrasChave.put("class",     TipoToken.T_CLASS);
         palavrasChave.put("abstract",  TipoToken.T_ABSTRACT);
+        palavrasChave.put("title",     TipoToken.T_TITLE);
     }
 
     // Ponteiros para controlar a leitura
@@ -75,6 +76,10 @@ public class AnalisadorLexico {
                 } else { 
                     adicionarToken(TipoToken.T_PRIVATE);
                 }
+                break;
+
+            case '>':
+                adicionarToken(TipoToken.T_GREATER);
                 break;
             
             case '<':

@@ -37,25 +37,23 @@ public class AnalisadorSintatico {
         }
     }
 
-    // Regra: Declaracao -> DeclaracaoClasse | DeclaracaoRelacionamento | T_NEWLINE
+    // Regra: Declaracao -> DeclaracaoClasse | DeclaracaoRelacionamento | Titulo | T_NEWLINE
     private void declaracao() {
-        // Se for 'class', é uma declaração de classe
         if (match(TipoToken.T_CLASS)) {
             declaracaoClasse();
         } 
-        // Se for um ID, pode ser um relacionamento (ex: Aluno --> Turma)
+        else if (match(TipoToken.T_TITLE)) { // <--- NOVO
+            tratarTitulo();
+        }
         else if (check(TipoToken.T_ID) && 
                  checkProximo(TipoToken.T_LINK, TipoToken.T_ASSOCIACAO, TipoToken.T_AGREGACAO, 
                                 TipoToken.T_COMPOSICAO, TipoToken.T_HERANCA, TipoToken.T_IMPLEMENTACAO)) {
             declaracaoRelacionamento();
         } 
-        // Se for só uma linha em branco, consome e ignora
         else if (match(TipoToken.T_NEWLINE)) {
-            // Ignora a linha em branco
+            // Ignora
         } 
-        // Se for qualquer outra coisa, é um erro
         else if (!isAtEnd()){
-            // Se não for o fim, mas não sabemos o que é, avance para evitar loop infinito
             System.err.println("Token inesperado ignorado: " + avancar().lexema);
         }
     }
@@ -63,38 +61,91 @@ public class AnalisadorSintatico {
     // Regra: DeclaracaoClasse -> 'class' ID '{' ... '}'
     private void declaracaoClasse() {
         Token nomeClasse = consumir(TipoToken.T_ID, "Esperado nome da classe.");
+        ClasseUML classe = new ClasseUML(nomeClasse.lexema);
         
-        // Adiciona a classe à nossa AST
-        classes.add(new ClasseUML(nomeClasse.lexema));
-
-        // TODO: Implementar parsing de membros (atributos/métodos)
-        // Por enquanto, vamos apenas consumir até fechar as chaves
+        // Abre chaves
         if (match(TipoToken.T_OPEN_BRACE)) {
+            // Nova linha opcional após {
+            match(TipoToken.T_NEWLINE);
+
+            // Enquanto não fechar chaves e não acabar o arquivo
             while (!check(TipoToken.T_CLOSE_BRACE) && !isAtEnd()) {
-                avancar(); // Avança consumindo o corpo da classe
+                declaracaoMembro(classe);
             }
+            
             consumir(TipoToken.T_CLOSE_BRACE, "Esperado '}' para fechar a classe.");
         }
         
-        // Consome a nova linha opcional
+        // Adiciona a classe completa (com membros) à lista
+        classes.add(classe);
+        
+        // Consome a nova linha final
+        match(TipoToken.T_NEWLINE);
+    }
+
+    private void declaracaoMembro(ClasseUML classe) {
+        // 1. Visibilidade (opcional)
+        String visibilidade = "public"; // padrão
+        if (match(TipoToken.T_PUBLIC)) visibilidade = "+";
+        else if (match(TipoToken.T_PRIVATE)) visibilidade = "-";
+        else if (match(TipoToken.T_PROTECTED)) visibilidade = "#";
+        else if (match(TipoToken.T_PACKAGE)) visibilidade = "~";
+
+        // 2. Nome do membro
+        Token nome = consumir(TipoToken.T_ID, "Esperado nome do atributo ou método.");
+
+        // 3. Decisão: É Método '(' ou Atributo ':' ?
+        
+        // CASO MÉTODO: Se tiver parenteses
+        if (match(TipoToken.T_OPEN_PAREN)) {
+            // (Ignorando parâmetros por enquanto para simplificar)
+            while (!check(TipoToken.T_CLOSE_PAREN) && !isAtEnd()) {
+                avancar(); 
+            }
+            consumir(TipoToken.T_CLOSE_PAREN, "Esperado ')' após parâmetros.");
+
+            // Tipo de retorno opcional (ex: : void)
+            String tipoRetorno = "void";
+            if (match(TipoToken.T_COLON)) {
+                 Token tipo = consumir(TipoToken.T_ID, "Esperado tipo de retorno.");
+                 tipoRetorno = tipo.lexema;
+            }
+
+            classe.metodos.add(new MetodoUML(visibilidade, nome.lexema, tipoRetorno));
+        }
+        // CASO ATRIBUTO: Se tiver dois pontos ou terminar a linha
+        else {
+            String tipo = "String"; // Tipo padrão se não especificado
+            if (match(TipoToken.T_COLON)) {
+                Token tokenTipo = consumir(TipoToken.T_ID, "Esperado tipo do atributo.");
+                tipo = tokenTipo.lexema;
+            }
+            
+            classe.atributos.add(new AtributoUML(visibilidade, nome.lexema, tipo));
+        }
+
+        // Consome a quebra de linha obrigatória após cada membro
         match(TipoToken.T_NEWLINE);
     }
 
     // Regra: DeclaracaoRelacionamento -> ID Operador ID (':' Label)?
     private void declaracaoRelacionamento() {
         Token classeOrigem = consumir(TipoToken.T_ID, "Esperado ID da classe de origem.");
-        
-        Token operador = avancar(); // Consome o operador (ex: -->, --, <|--)
-        
+        Token operador = avancar();
         Token classeDestino = consumir(TipoToken.T_ID, "Esperado ID da classe de destino.");
         
-        String label = null;
-        // Verifica se tem um label (ex: : "matriculado")
+        String label = "";
+        
+        // Verifica se tem dois pontos ':'
         if (match(TipoToken.T_COLON)) {
-            label = consumir(TipoToken.T_STRING_LITERAL, "Esperado um label em string.").lexema;
+            // Lógica NOVA: Lê tudo até o final da linha como label
+            StringBuilder sb = new StringBuilder();
+            while (!check(TipoToken.T_NEWLINE) && !isAtEnd()) {
+                sb.append(avancar().lexema).append(" ");
+            }
+            label = sb.toString().trim();
         }
         
-        // Adiciona o relacionamento à nossa AST
         relacionamentos.add(new RelacionamentoUML(
             classeOrigem.lexema, 
             classeDestino.lexema, 
@@ -102,7 +153,6 @@ public class AnalisadorSintatico {
             label
         ));
 
-        // Consome a nova linha opcional
         match(TipoToken.T_NEWLINE);
     }
 
@@ -186,5 +236,15 @@ public class AnalisadorSintatico {
      */
     private boolean isAtEnd() {
         return tokenAtual().tipo == TipoToken.T_EOF;
+    }
+
+    private void tratarTitulo() {
+        // O título é tudo o que vem depois de 'title' até o fim da linha
+        StringBuilder sb = new StringBuilder();
+        while (!check(TipoToken.T_NEWLINE) && !isAtEnd()) {
+            sb.append(avancar().lexema).append(" ");
+        }
+        System.out.println("TÍTULO DO DIAGRAMA: " + sb.toString().trim());
+        match(TipoToken.T_NEWLINE);
     }
 }

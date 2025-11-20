@@ -1,13 +1,10 @@
 import java.util.List;
 import java.util.ArrayList;
 
-// (Você pode adicionar classes para Atributo e Metodo depois)
-// Por enquanto, vamos focar em classes e relacionamentos.
-
 public class ClasseUML {
     public final String nome;
-    // TODO: Adicionar List<Atributo> atributos;
-    // TODO: Adicionar List<Metodo> metodos;
+    public final List<AtributoUML> atributos = new ArrayList<>();
+    public final List<MetodoUML> metodos = new ArrayList<>();
 
     public ClasseUML(String nome) {
         this.nome = nome;
@@ -15,6 +12,15 @@ public class ClasseUML {
 
     @Override
     public String toString() {
-        return "ClasseUML [Nome: " + nome + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Classe: ").append(nome).append("\n");
+        
+        for (AtributoUML atr : atributos) {
+            sb.append(atr.toString()).append("\n");
+        }
+        for (MetodoUML met : metodos) {
+            sb.append(met.toString()).append("\n");
+        }
+        return sb.toString();
     }
 }
