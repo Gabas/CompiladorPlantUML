@@ -1,12 +1,105 @@
 @startuml
-class Aluno {
+title Sistema de Campeonato de Futebol - Diagrama de Classes
+
+class Time {
+  - id: int
   - nome: String
-  + estudar()
+  - cidade: String
+  - fundacao: Date
+  + adicionarJogador()
+  + registrarPartida()
 }
 
-Aluno --> Turma : "matriculado em"
-
-class Turma {
-  + codigo: int
+class Jogador {
+  - id: int
+  - nome: String
+  - dataNascimento: Date
+  - numeroCamisa: int
+  - posicao: String
+  - timeId: int
 }
+
+class Tecnico {
+  - id: int
+  - nome: String
+  - experiencia: int
+  - timeId: int
+}
+
+class Estadio {
+  - id: int
+  - nome: String
+  - localizacao: String
+  - capacidade: int
+}
+
+class Partida {
+  - id: int
+  - data: Date
+  - estadioId: int
+  - timeCasaId: int
+  - timeForaId: int
+  - golsTimeCasa: int
+  - golsTimeFora: int
+  + registrarResultado()
+}
+
+class Campeonato {
+  - id: int
+  - nome: String
+  - ano: int
+  + adicionarTime()
+  + listarPartidas()
+}
+
+class Arbitro {
+  - id: int
+  - nome: String
+  - categoria: String
+}
+
+class Escalacao {
+  - id: int
+  - partidaId: int
+  - jogadorId: int
+  - titular: boolean
+}
+
+class Estatistica {
+}
+
+class EstatisticaJogador {
+  - id: int
+  - jogadorId: int
+  - partidas: int
+  - gols: int
+  - assistencias: int
+  - cartoesAmarelos: int
+  - cartoesVermelhos: int
+}
+
+class Titulo {
+  - id: int
+  - timeId: int
+  - nome: String
+  - ano: int
+}
+
+' Relacionamentos
+Time --> Jogador : possui >
+Time --> Tecnico : é comandado por >
+Time --> Titulo : conquista >
+Time --> Partida : participa >
+
+Jogador --> EstatisticaJogador : possui >
+Jogador --> Escalacao : é escalado em >
+
+Partida --> Estadio : ocorre em >
+Partida --> Arbitro : é arbitrada por >
+Partida --> Escalacao : possui >
+
+Campeonato --> Time : inclui >
+Campeonato -- Partida : organiza >
+
+Estatistica <|-- EstatisticaJogador
 @enduml

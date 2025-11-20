@@ -3,21 +3,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Analisador Léxico (Scanner) para a linguagem PlantUML (Diagrama de Classe).
- * Lê o código fonte como uma String e o transforma em uma lista de Tokens.
- */
 public class AnalisadorLexico {
 
     private final String codigoFonte;
     private final List<Token> tokens = new ArrayList<>();
     
-    // Mapa de palavras-chave da linguagem
     private static final Map<String, TipoToken> palavrasChave;
 
     static {
         palavrasChave = new HashMap<>();
-        // Use o nome da enum para acessar os valores
         palavrasChave.put("@startuml", TipoToken.T_START_UML);
         palavrasChave.put("@enduml",   TipoToken.T_END_UML);
         palavrasChave.put("class",     TipoToken.T_CLASS);
@@ -25,35 +19,24 @@ public class AnalisadorLexico {
         palavrasChave.put("title",     TipoToken.T_TITLE);
     }
 
-    // Ponteiros para controlar a leitura
-    private int atual = 0;   // Posição atual no `codigoFonte`
-    private int linha = 1;     // Linha atual (para reportar erros)
-    private int coluna = 1;  // Coluna atual (para reportar erros)
+    private int atual = 0;
+    private int linha = 1;
+    private int coluna = 1;
 
     public AnalisadorLexico(String codigoFonte) {
         this.codigoFonte = codigoFonte;
     }
 
-    /**
-     * Método principal que escaneia todo o código e retorna a lista de tokens.
-     */
     public List<Token> scanTokens() {
-        // Continua enquanto não chegarmos ao fim do arquivo
         while (!isAtEnd()) {
-            // Analisamos um caractere de cada vez
             scanToken();
         }
-
-        // Adiciona um token especial de Fim de Arquivo (EOF)
         tokens.add(new Token(TipoToken.T_EOF, "", linha, coluna));
         return tokens;
     }
 
-    /**
-     * Analisa o PRÓXIMO caractere e decide qual token criar.
-     */
     private void scanToken() {
-        char c = avancar(); // Pega o caractere atual e avança o ponteiro
+        char c = avancar();
 
         switch (c) {
             // --- SÍMBOLOS SIMPLES ---
@@ -66,77 +49,102 @@ public class AnalisadorLexico {
             case '+': adicionarToken(TipoToken.T_PUBLIC); break;
             case '#': adicionarToken(TipoToken.T_PROTECTED); break;
             case '~': adicionarToken(TipoToken.T_PACKAGE); break;
+            
+            // --- CORREÇÃO 1: COMENTÁRIOS ---
+            case '\'': 
+                // Ignora tudo até o fim da linha
+                while (peek() != '\n' && !isAtEnd()) {
+                    avancar();
+                }
+                break;
 
-            // --- SÍMBOLOS DE MÚLTIPLOS CARACTERES ---
+            // --- CORREÇÃO 2: OPERADOR DE SETA (--> vs -> vs -- vs -) ---
             case '-':
                 if (match('>')) {
-                    adicionarToken(TipoToken.T_ASSOCIACAO, "-->"); // Corrigido
-                } else if (match('-')) { 
-                    adicionarToken(TipoToken.T_LINK, "--"); // Corrigido
+                    adicionarToken(TipoToken.T_ASSOCIACAO, "->");
+                } else if (match('-')) {
+                    // Achou '--', verifica se tem um '>' depois (para '-->')
+                    if (match('>')) {
+                        adicionarToken(TipoToken.T_ASSOCIACAO, "-->");
+                    } else {
+                        adicionarToken(TipoToken.T_LINK, "--");
+                    }
                 } else { 
                     adicionarToken(TipoToken.T_PRIVATE);
                 }
                 break;
-
-            case '>':
-                adicionarToken(TipoToken.T_GREATER);
-                break;
             
+            // --- OPERADORES DE HERANÇA/IMPLEMENTAÇÃO ---
             case '<':
                 if (match('|')) {
                     if (match('.')) {
                         if (match('.')) {
-                            adicionarToken(TipoToken.T_IMPLEMENTACAO, "<|.."); // Adicionado
+                            adicionarToken(TipoToken.T_IMPLEMENTACAO, "<|..");
                         }
                     } else if (match('-')) {
                         if (match('-')) {
-                            adicionarToken(TipoToken.T_HERANCA, "<|--"); // Adicionado
+                            adicionarToken(TipoToken.T_HERANCA, "<|--");
                         }
                     }
+                } else {
+                    // Se não for operador, pode ser o símbolo < solto (se quiser tratar erro ou ignorar)
+                    // Mas neste caso específico, vamos deixar passar para não travar
                 }
                 break;
 
+            // --- CORREÇÃO 3: AGREGAÇÃO E IDENTIFICADORES COM 'o' ---
             case 'o':
-                if (match('-')) {
-                    if (match('-')) {
-                        adicionarToken(TipoToken.T_AGREGACAO, "o--"); // Adicionado
-                    }
+                // Verifica se é 'o--' SEM consumir se der errado
+                if (peek() == '-') {
+                     // Tenta consumir o primeiro '-'
+                     avancar(); 
+                     if (match('-')) {
+                         adicionarToken(TipoToken.T_AGREGACAO, "o--");
+                         break; // Sai do switch, token já adicionado
+                     }
+                     // Se chegou aqui, era 'o-' mas não 'o--'. 
+                     // Isso é raro, mas vamos recuar? Não, simplificando:
+                     // Vamos assumir que 'o-' não existe na gramática e tratar como ID seria complexo.
+                     // Mas para 'organiza', o peek() == '-' é FALSO, então ele cai direto no identificador()
                 }
+                // Se não for operador, É UM IDENTIFICADOR QUE COMEÇA COM 'o' (ex: organiza)
+                identificador();
                 break;
 
             case '*':
-                if (match('-')) {
-                    if (match('-')) {
-                        adicionarToken(TipoToken.T_COMPOSICAO, "*--"); // Adicionado
-                    }
+                if (match('-') && match('-')) {
+                    adicionarToken(TipoToken.T_COMPOSICAO, "*--");
+                } else {
+                    // Mesmo caso do 'o', se for asterisco solto (multiplicidade) ou ID
                 }
                 break;
+            
+            // --- SÍMBOLO MAIOR QUE ---
+            case '>':
+                adicionarToken(TipoToken.T_GREATER);
+                break;
 
-            // --- IGNORAR ESPAÇOS EM BRANCO ---
+            // --- IGNORAR ESPAÇOS ---
             case ' ':
             case '\r':
             case '\t':
-                // Ignora.
                 break;
             
-            // --- NOVA LINHA ---
             case '\n':
                 adicionarToken(TipoToken.T_NEWLINE);
                 linha++;
                 coluna = 1;
                 break;
             
-            // --- STRINGS LITERAIS ---
             case '"':
                 stringLiteral();
                 break;
 
             default:
-                // --- PALAVRAS-CHAVE E IDENTIFICADORES ---
+                // --- CORREÇÃO 4: ACENTOS E LETRAS ---
                 if (isLetra(c) || c == '@') { 
                     identificador();
                 } 
-                // --- ERRO ---
                 else {
                     System.err.printf("Erro Léxico: Caractere inesperado '%c' na Linha %d Col %d\n", c, linha, coluna);
                 }
@@ -166,23 +174,23 @@ public class AnalisadorLexico {
     }
     
     private void identificador() {
+        // 'atual - 1' pega o caractere que já consumimos (ex: 'o' de organiza)
         int inicio = atual - 1;
         while (isLetraOuDigito(peek())) {
             avancar();
         }
         
         String texto = codigoFonte.substring(inicio, atual);
-        TipoToken tipo = palavrasChave.get(texto); // Verifica se é palavra-chave
+        TipoToken tipo = palavrasChave.get(texto);
         
         if (tipo == null) {
-            tipo = TipoToken.T_ID; // Se não for, é um ID
+            tipo = TipoToken.T_ID;
         }
-        adicionarToken(tipo, texto);
+        adicionarToken(tipo, texto); // IMPORTANTE: Passar o texto!
     }
     
     private void stringLiteral() {
         int inicio = atual; 
-
         while (peek() != '"' && !isAtEnd()) {
             if (peek() == '\n') {
                 linha++; 
@@ -197,19 +205,17 @@ public class AnalisadorLexico {
         }
         
         String valor = codigoFonte.substring(inicio, atual);
-        avancar(); // Consome o '"' final
-        
-        // Use T_STRING_LITERAL (o nome corrigido)
+        avancar(); 
         adicionarToken(TipoToken.T_STRING_LITERAL, valor);
     }
 
-    // --- Métodos de Verificação ---
+    // --- CORREÇÃO: Suporte a Unicode (Acentos) ---
     private boolean isLetra(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+        return Character.isLetter(c) || c == '_';
     }
 
     private boolean isDigito(char c) {
-        return c >= '0' && c <= '9';
+        return Character.isDigit(c);
     }
     
     private boolean isLetraOuDigito(char c) {
