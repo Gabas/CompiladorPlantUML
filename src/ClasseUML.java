@@ -5,6 +5,7 @@ public class ClasseUML {
     public final String nome;
     public final List<AtributoUML> atributos = new ArrayList<>();
     public final List<MetodoUML> metodos = new ArrayList<>();
+    public int x, y, width, height;
 
     public ClasseUML(String nome) {
         this.nome = nome;

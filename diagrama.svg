@@ -1,0 +1,161 @@
+<svg width="1400" height="1200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="sombra" x="0" y="0" width="200%" height="200%">
+<feOffset result="offOut" in="SourceAlpha" dx="3" dy="3" />
+<feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+</filter>
+<marker id="seta_open" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto">
+<path d="M0,0 L0,6 L9,3 z" fill="black" />
+</marker>
+<marker id="seta_heranca" markerWidth="16" markerHeight="16" refX="14" refY="7" orient="auto">
+<path d="M0,0 L14,7 L0,14 L0,0" fill="white" stroke="black" />
+</marker>
+<marker id="seta_agregacao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
+<path d="M0,5 L8,0 L16,5 L8,10 z" fill="white" stroke="black" />
+</marker>
+<marker id="seta_composicao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
+<path d="M0,5 L8,0 L16,5 L8,10 z" fill="black" stroke="black" />
+</marker>
+</defs>
+<style>
+.texto { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+.titulo { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: black; }
+.box { fill: #fff; stroke: #333; stroke-width: 1; filter: url(#sombra); }
+.header-box { fill: #f0f0f0; stroke: #333; stroke-width: 1; }
+.linha { stroke: #333; stroke-width: 1.5; }
+.label-bg { fill: white; opacity: 0.9; }
+</style>
+<rect x="590" y="528" width="220" height="145" class="box" />
+<rect x="590" y="528" width="220" height="30" class="header-box" />
+<text x="700" y="548" class="titulo" text-anchor="middle">Time</text>
+<line x1="590" y1="558" x2="810" y2="558" class="linha" />
+<text x="600" y="573" class="texto">- id : int</text>
+<text x="600" y="588" class="texto">- nome : String</text>
+<text x="600" y="603" class="texto">- cidade : String</text>
+<text x="600" y="618" class="texto">- fundacao : Date</text>
+<line x1="590" y1="628" x2="810" y2="628" class="linha" />
+<text x="600" y="643" class="texto" style="font-style:italic">+ adicionarJogador() : void</text>
+<text x="600" y="658" class="texto" style="font-style:italic">+ registrarPartida() : void</text>
+<rect x="1140" y="513" width="220" height="175" class="box" />
+<rect x="1140" y="513" width="220" height="30" class="header-box" />
+<text x="1250" y="533" class="titulo" text-anchor="middle">Partida</text>
+<line x1="1140" y1="543" x2="1360" y2="543" class="linha" />
+<text x="1150" y="558" class="texto">- id : int</text>
+<text x="1150" y="573" class="texto">- data : Date</text>
+<text x="1150" y="588" class="texto">- estadioId : int</text>
+<text x="1150" y="603" class="texto">- timeCasaId : int</text>
+<text x="1150" y="618" class="texto">- timeForaId : int</text>
+<text x="1150" y="633" class="texto">- golsTimeCasa : int</text>
+<text x="1150" y="648" class="texto">- golsTimeFora : int</text>
+<line x1="1140" y1="658" x2="1360" y2="658" class="linha" />
+<text x="1150" y="673" class="texto" style="font-style:italic">+ registrarResultado() : void</text>
+<rect x="1034" y="792" width="220" height="145" class="box" />
+<rect x="1034" y="792" width="220" height="30" class="header-box" />
+<text x="1144" y="812" class="titulo" text-anchor="middle">Jogador</text>
+<line x1="1034" y1="822" x2="1254" y2="822" class="linha" />
+<text x="1044" y="837" class="texto">- id : int</text>
+<text x="1044" y="852" class="texto">- nome : String</text>
+<text x="1044" y="867" class="texto">- dataNascimento : Date</text>
+<text x="1044" y="882" class="texto">- numeroCamisa : int</text>
+<text x="1044" y="897" class="texto">- posicao : String</text>
+<text x="1044" y="912" class="texto">- timeId : int</text>
+<rect x="759" y="962" width="220" height="130" class="box" />
+<rect x="759" y="962" width="220" height="30" class="header-box" />
+<text x="869" y="982" class="titulo" text-anchor="middle">Campeonato</text>
+<line x1="759" y1="992" x2="979" y2="992" class="linha" />
+<text x="769" y="1007" class="texto">- id : int</text>
+<text x="769" y="1022" class="texto">- nome : String</text>
+<text x="769" y="1037" class="texto">- ano : int</text>
+<line x1="759" y1="1047" x2="979" y2="1047" class="linha" />
+<text x="769" y="1062" class="texto" style="font-style:italic">+ adicionarTime() : void</text>
+<text x="769" y="1077" class="texto" style="font-style:italic">+ listarPartidas() : void</text>
+<rect x="420" y="970" width="220" height="115" class="box" />
+<rect x="420" y="970" width="220" height="30" class="header-box" />
+<text x="530" y="990" class="titulo" text-anchor="middle">Escalacao</text>
+<line x1="420" y1="1000" x2="640" y2="1000" class="linha" />
+<text x="430" y="1015" class="texto">- id : int</text>
+<text x="430" y="1030" class="texto">- partidaId : int</text>
+<text x="430" y="1045" class="texto">- jogadorId : int</text>
+<text x="430" y="1060" class="texto">- titular : boolean</text>
+<rect x="145" y="784" width="220" height="160" class="box" />
+<rect x="145" y="784" width="220" height="30" class="header-box" />
+<text x="255" y="804" class="titulo" text-anchor="middle">EstatisticaJogador</text>
+<line x1="145" y1="814" x2="365" y2="814" class="linha" />
+<text x="155" y="829" class="texto">- id : int</text>
+<text x="155" y="844" class="texto">- jogadorId : int</text>
+<text x="155" y="859" class="texto">- partidas : int</text>
+<text x="155" y="874" class="texto">- gols : int</text>
+<text x="155" y="889" class="texto">- assistencias : int</text>
+<text x="155" y="904" class="texto">- cartoesAmarelos : int</text>
+<text x="155" y="919" class="texto">- cartoesVermelhos : int</text>
+<rect x="40" y="543" width="220" height="115" class="box" />
+<rect x="40" y="543" width="220" height="30" class="header-box" />
+<text x="150" y="563" class="titulo" text-anchor="middle">Tecnico</text>
+<line x1="40" y1="573" x2="260" y2="573" class="linha" />
+<text x="50" y="588" class="texto">- id : int</text>
+<text x="50" y="603" class="texto">- nome : String</text>
+<text x="50" y="618" class="texto">- experiencia : int</text>
+<text x="50" y="633" class="texto">- timeId : int</text>
+<rect x="145" y="278" width="220" height="115" class="box" />
+<rect x="145" y="278" width="220" height="30" class="header-box" />
+<text x="255" y="298" class="titulo" text-anchor="middle">Estadio</text>
+<line x1="145" y1="308" x2="365" y2="308" class="linha" />
+<text x="155" y="323" class="texto">- id : int</text>
+<text x="155" y="338" class="texto">- nome : String</text>
+<text x="155" y="353" class="texto">- localizacao : String</text>
+<text x="155" y="368" class="texto">- capacidade : int</text>
+<rect x="420" y="122" width="220" height="100" class="box" />
+<rect x="420" y="122" width="220" height="30" class="header-box" />
+<text x="530" y="142" class="titulo" text-anchor="middle">Arbitro</text>
+<line x1="420" y1="152" x2="640" y2="152" class="linha" />
+<text x="430" y="167" class="texto">- id : int</text>
+<text x="430" y="182" class="texto">- nome : String</text>
+<text x="430" y="197" class="texto">- categoria : String</text>
+<rect x="759" y="145" width="220" height="55" class="box" />
+<rect x="759" y="145" width="220" height="30" class="header-box" />
+<text x="869" y="165" class="titulo" text-anchor="middle">Estatistica</text>
+<line x1="759" y1="175" x2="979" y2="175" class="linha" />
+<rect x="1034" y="278" width="220" height="115" class="box" />
+<rect x="1034" y="278" width="220" height="30" class="header-box" />
+<text x="1144" y="298" class="titulo" text-anchor="middle">Titulo</text>
+<line x1="1034" y1="308" x2="1254" y2="308" class="linha" />
+<text x="1044" y="323" class="texto">- id : int</text>
+<text x="1044" y="338" class="texto">- timeId : int</text>
+<text x="1044" y="353" class="texto">- nome : String</text>
+<text x="1044" y="368" class="texto">- ano : int</text>
+<line x1="810" y1="600" x2="1034" y2="864" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="894" y="722" width="56" height="14" class="label-bg" />
+<text x="922" y="732" class="texto" fill="blue" text-anchor="middle">possui ></text>
+<line x1="590" y1="600" x2="260" y2="600" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="366" y="590" width="119" height="14" class="label-bg" />
+<text x="425" y="600" class="texto" fill="blue" text-anchor="middle">é comandado por ></text>
+<line x1="810" y1="600" x2="1034" y2="335" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="884" y="457" width="77" height="14" class="label-bg" />
+<text x="922" y="467" class="texto" fill="blue" text-anchor="middle">conquista ></text>
+<line x1="810" y1="600" x2="1140" y2="600" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="937" y="590" width="77" height="14" class="label-bg" />
+<text x="975" y="600" class="texto" fill="blue" text-anchor="middle">participa ></text>
+<line x1="1034" y1="864" x2="365" y2="864" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="671" y="854" width="56" height="14" class="label-bg" />
+<text x="699" y="864" class="texto" fill="blue" text-anchor="middle">possui ></text>
+<line x1="1034" y1="864" x2="640" y2="1027" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="785" y="935" width="105" height="14" class="label-bg" />
+<text x="837" y="945" class="texto" fill="blue" text-anchor="middle">é escalado em ></text>
+<line x1="1140" y1="600" x2="365" y2="335" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="714" y="457" width="77" height="14" class="label-bg" />
+<text x="752" y="467" class="texto" fill="blue" text-anchor="middle">ocorre em ></text>
+<line x1="1140" y1="600" x2="640" y2="172" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="831" y="376" width="119" height="14" class="label-bg" />
+<text x="890" y="386" class="texto" fill="blue" text-anchor="middle">é arbitrada por ></text>
+<line x1="1140" y1="600" x2="640" y2="1027" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="862" y="803" width="56" height="14" class="label-bg" />
+<text x="890" y="813" class="texto" fill="blue" text-anchor="middle">possui ></text>
+<line x1="869" y1="962" x2="700" y2="673" class="linha" stroke-dasharray="0" marker-end="url(#seta_open)" />
+<rect x="756" y="807" width="56" height="14" class="label-bg" />
+<text x="784" y="817" class="texto" fill="blue" text-anchor="middle">inclui ></text>
+<line x1="869" y1="962" x2="1250" y2="688" class="linha" stroke-dasharray="5,5" marker-end="url(#none)" />
+<rect x="1024" y="815" width="70" height="14" class="label-bg" />
+<text x="1059" y="825" class="texto" fill="blue" text-anchor="middle">organiza ></text>
+<line x1="869" y1="200" x2="255" y2="784" class="linha" stroke-dasharray="0" marker-end="url(#seta_heranca)" />
+</svg>

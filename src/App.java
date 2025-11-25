@@ -47,5 +47,10 @@ public class App {
         for (RelacionamentoUML rel : sintatico.relacionamentos) {
             System.out.println(rel);
         }
+
+        System.out.println("\n--- Gerando SVG ---");
+        GeradorSVG gerador = new GeradorSVG(sintatico.classes, sintatico.relacionamentos);
+        gerador.gerarArquivo("diagrama.svg");
+        System.out.println("Arquivo 'diagrama.svg' gerado com sucesso na pasta do projeto!");
     }
 }
