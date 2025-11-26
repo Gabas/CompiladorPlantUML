@@ -21,7 +21,6 @@ public class AnalisadorSemantico {
         System.out.println("Verificando consistência do diagrama...");
         
         // 1. Tabela de Símbolos (apenas nomes das classes)
-        // Usamos um Set para busca rápida O(1)
         Set<String> nomesClasses = new HashSet<>();
         
         // Passo 1: Verificar duplicidade de classes

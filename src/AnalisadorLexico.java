@@ -35,6 +35,7 @@ public class AnalisadorLexico {
         return tokens;
     }
 
+    // --- MÉTODO PRINCIPAL DE SCAN ---
     private void scanToken() {
         char c = avancar();
 
@@ -50,20 +51,18 @@ public class AnalisadorLexico {
             case '#': adicionarToken(TipoToken.T_PROTECTED); break;
             case '~': adicionarToken(TipoToken.T_PACKAGE); break;
             
-            // --- CORREÇÃO 1: COMENTÁRIOS ---
+            // comentários de linha: ignora tudo até o \n
             case '\'': 
-                // Ignora tudo até o fim da linha
                 while (peek() != '\n' && !isAtEnd()) {
                     avancar();
                 }
                 break;
 
-            // --- CORREÇÃO 2: OPERADOR DE SETA (--> vs -> vs -- vs -) ---
+            // -> e -->
             case '-':
                 if (match('>')) {
                     adicionarToken(TipoToken.T_ASSOCIACAO, "->");
                 } else if (match('-')) {
-                    // Achou '--', verifica se tem um '>' depois (para '-->')
                     if (match('>')) {
                         adicionarToken(TipoToken.T_ASSOCIACAO, "-->");
                     } else {
@@ -74,7 +73,7 @@ public class AnalisadorLexico {
                 }
                 break;
             
-            // --- OPERADORES DE HERANÇA/IMPLEMENTAÇÃO ---
+            // herança e implementação
             case '<':
                 if (match('|')) {
                     if (match('.')) {
@@ -87,27 +86,21 @@ public class AnalisadorLexico {
                         }
                     }
                 } else {
-                    // Se não for operador, pode ser o símbolo < solto (se quiser tratar erro ou ignorar)
-                    // Mas neste caso específico, vamos deixar passar para não travar
+                    // apenas '<' isolado, que não é esperado na gramática
+                    // deixa passar só pra não travar o analisador
                 }
                 break;
 
-            // --- CORREÇÃO 3: AGREGAÇÃO E IDENTIFICADORES COM 'o' ---
             case 'o':
-                // Verifica se é 'o--' SEM consumir se der errado
                 if (peek() == '-') {
-                     // Tenta consumir o primeiro '-'
                      avancar(); 
                      if (match('-')) {
                          adicionarToken(TipoToken.T_AGREGACAO, "o--");
-                         break; // Sai do switch, token já adicionado
+                         break; // sai do switch, token já adicionado
                      }
-                     // Se chegou aqui, era 'o-' mas não 'o--'. 
-                     // Isso é raro, mas vamos recuar? Não, simplificando:
-                     // Vamos assumir que 'o-' não existe na gramática e tratar como ID seria complexo.
-                     // Mas para 'organiza', o peek() == '-' é FALSO, então ele cai direto no identificador()
+                     // se chegou aqui, era 'o-' mas não 'o--'. 
                 }
-                // Se não for operador, É UM IDENTIFICADOR QUE COMEÇA COM 'o' (ex: organiza)
+                // se não for operador, é um identificador que começa com 'o'
                 identificador();
                 break;
 
@@ -115,16 +108,15 @@ public class AnalisadorLexico {
                 if (match('-') && match('-')) {
                     adicionarToken(TipoToken.T_COMPOSICAO, "*--");
                 } else {
-                    // Mesmo caso do 'o', se for asterisco solto (multiplicidade) ou ID
+                    // mesmo caso do 'o', se for asterisco solto (multiplicidade) ou ID
                 }
                 break;
             
-            // --- SÍMBOLO MAIOR QUE ---
             case '>':
                 adicionarToken(TipoToken.T_GREATER);
                 break;
 
-            // --- IGNORAR ESPAÇOS ---
+            // ignorar espaços em branco
             case ' ':
             case '\r':
             case '\t':
@@ -141,7 +133,7 @@ public class AnalisadorLexico {
                 break;
 
             default:
-                // --- CORREÇÃO 4: ACENTOS E LETRAS ---
+                // acento e letras Unicode suportados
                 if (isLetra(c) || c == '@') { 
                     identificador();
                 } 
@@ -186,7 +178,7 @@ public class AnalisadorLexico {
         if (tipo == null) {
             tipo = TipoToken.T_ID;
         }
-        adicionarToken(tipo, texto); // IMPORTANTE: Passar o texto!
+        adicionarToken(tipo, texto);
     }
     
     private void stringLiteral() {
