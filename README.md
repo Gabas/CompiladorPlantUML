@@ -48,11 +48,11 @@ O objetivo é automatizar a visualização de diagramas UML a partir de código 
 
 ### Passo a Passo
 
-    1. Clone o repositório ou baixe os arquivos.
+1. Clone o repositório ou baixe os arquivos.
 
-    2. Certifique-se de que o arquivo `teste.txt` está na raiz do projeto com o código PlantUML que deseja converter.
+2. Certifique-se de que o arquivo `teste.txt` está na raiz do projeto com o código PlantUML que deseja converter.
 
-    3. Compile o projeto:
+3. Compile o projeto:
    ```bash
    javac -d bin src/*.java
    ```
