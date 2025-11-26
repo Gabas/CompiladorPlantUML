@@ -1,0 +1,54 @@
+<svg width="1400" height="1200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="sombra" x="0" y="0" width="200%" height="200%">
+<feOffset result="offOut" in="SourceAlpha" dx="3" dy="3" />
+<feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+</filter>
+<marker id="seta_open" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="black" /></marker>
+<marker id="seta_heranca" markerWidth="16" markerHeight="16" refX="14" refY="7" orient="auto"><path d="M0,0 L14,7 L0,14 L0,0" fill="white" stroke="black" /></marker>
+<marker id="seta_agregacao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto"><path d="M0,5 L8,0 L16,5 L8,10 z" fill="white" stroke="black" /></marker>
+<marker id="seta_composicao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto"><path d="M0,5 L8,0 L16,5 L8,10 z" fill="black" stroke="black" /></marker>
+</defs>
+<style>
+.texto { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+.titulo { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: black; }
+.titulo-diagrama { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+.box { fill: #fff; stroke: #333; stroke-width: 1; filter: url(#sombra); }
+.header-box { fill: #f0f0f0; stroke: #333; stroke-width: 1; }
+.linha { stroke: #333; stroke-width: 1.5; }
+.label-bg { fill: white; opacity: 0.9; }
+</style>
+<text x="700" y="40" class="titulo-diagrama" text-anchor="middle">Exemplo - Computador</text>
+<rect x="590" y="558" width="220" height="85" class="box" />
+<rect x="590" y="558" width="220" height="30" class="header-box" />
+<text x="700" y="578" class="titulo" text-anchor="middle">Computador</text>
+<line x1="590" y1="588" x2="810" y2="588" class="linha" />
+<text x="600" y="603" class="texto">- modelo : String</text>
+<line x1="590" y1="613" x2="810" y2="613" class="linha" />
+<text x="600" y="628" class="texto" style="font-style:italic">+ ligar() : void</text>
+<rect x="1140" y="565" width="220" height="70" class="box" />
+<rect x="1140" y="565" width="220" height="30" class="header-box" />
+<text x="1250" y="585" class="titulo" text-anchor="middle">Processador</text>
+<line x1="1140" y1="595" x2="1360" y2="595" class="linha" />
+<text x="1150" y="610" class="texto">- frequencia : float</text>
+<rect x="315" y="954" width="220" height="70" class="box" />
+<rect x="315" y="954" width="220" height="30" class="header-box" />
+<text x="425" y="974" class="titulo" text-anchor="middle">Monitor</text>
+<line x1="315" y1="984" x2="535" y2="984" class="linha" />
+<text x="325" y="999" class="texto">- polegadas : int</text>
+<rect x="314" y="175" width="220" height="70" class="box" />
+<rect x="314" y="175" width="220" height="30" class="header-box" />
+<text x="424" y="195" class="titulo" text-anchor="middle">Teclado</text>
+<line x1="314" y1="205" x2="534" y2="205" class="linha" />
+<text x="324" y="220" class="texto">- layout : String</text>
+<line x1="810" y1="600" x2="1140" y2="600" class="linha" stroke-dasharray="0" marker-end="url(#seta_composicao)" />
+<rect x="947" y="590" width="56" height="14" class="label-bg" />
+<text x="975" y="600" class="texto" fill="blue" text-anchor="middle">contem ></text>
+<line x1="700" y1="643" x2="425" y2="954" class="linha" stroke-dasharray="0" marker-end="url(#seta_agregacao)" />
+<rect x="545" y="788" width="35" height="14" class="label-bg" />
+<text x="562" y="798" class="texto" fill="blue" text-anchor="middle">usa ></text>
+<line x1="700" y1="558" x2="424" y2="245" class="linha" stroke-dasharray="0" marker-end="url(#seta_agregacao)" />
+<rect x="545" y="391" width="35" height="14" class="label-bg" />
+<text x="562" y="401" class="texto" fill="blue" text-anchor="middle">usa ></text>
+</svg>

@@ -9,6 +9,7 @@ public class AnalisadorSintatico {
     // A "AST" - o resultado final do parsing
     public final List<ClasseUML> classes = new ArrayList<>();
     public final List<RelacionamentoUML> relacionamentos = new ArrayList<>();
+    public String titulo = "";
 
     public AnalisadorSintatico(List<Token> tokens) {
         this.tokens = tokens;
@@ -156,6 +157,7 @@ public class AnalisadorSintatico {
         match(TipoToken.T_NEWLINE);
     }
 
+    
 
     // --- Métodos Auxiliares do Parser ---
 
@@ -239,12 +241,11 @@ public class AnalisadorSintatico {
     }
 
     private void tratarTitulo() {
-        // O título é tudo o que vem depois de 'title' até o fim da linha
         StringBuilder sb = new StringBuilder();
         while (!check(TipoToken.T_NEWLINE) && !isAtEnd()) {
             sb.append(avancar().lexema).append(" ");
         }
-        System.out.println("TÍTULO DO DIAGRAMA: " + sb.toString().trim());
+        this.titulo = sb.toString().trim(); // Salva o título!
         match(TipoToken.T_NEWLINE);
     }
 }

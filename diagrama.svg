@@ -5,27 +5,21 @@
 <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
 <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
 </filter>
-<marker id="seta_open" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto">
-<path d="M0,0 L0,6 L9,3 z" fill="black" />
-</marker>
-<marker id="seta_heranca" markerWidth="16" markerHeight="16" refX="14" refY="7" orient="auto">
-<path d="M0,0 L14,7 L0,14 L0,0" fill="white" stroke="black" />
-</marker>
-<marker id="seta_agregacao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
-<path d="M0,5 L8,0 L16,5 L8,10 z" fill="white" stroke="black" />
-</marker>
-<marker id="seta_composicao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
-<path d="M0,5 L8,0 L16,5 L8,10 z" fill="black" stroke="black" />
-</marker>
+<marker id="seta_open" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="black" /></marker>
+<marker id="seta_heranca" markerWidth="16" markerHeight="16" refX="14" refY="7" orient="auto"><path d="M0,0 L14,7 L0,14 L0,0" fill="white" stroke="black" /></marker>
+<marker id="seta_agregacao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto"><path d="M0,5 L8,0 L16,5 L8,10 z" fill="white" stroke="black" /></marker>
+<marker id="seta_composicao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto"><path d="M0,5 L8,0 L16,5 L8,10 z" fill="black" stroke="black" /></marker>
 </defs>
 <style>
 .texto { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
 .titulo { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: black; }
+.titulo-diagrama { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
 .box { fill: #fff; stroke: #333; stroke-width: 1; filter: url(#sombra); }
 .header-box { fill: #f0f0f0; stroke: #333; stroke-width: 1; }
 .linha { stroke: #333; stroke-width: 1.5; }
 .label-bg { fill: white; opacity: 0.9; }
 </style>
+<text x="700" y="40" class="titulo-diagrama" text-anchor="middle">Sistema de Campeonato de Futebol - Diagrama de Classes</text>
 <rect x="590" y="528" width="220" height="145" class="box" />
 <rect x="590" y="528" width="220" height="30" class="header-box" />
 <text x="700" y="548" class="titulo" text-anchor="middle">Time</text>

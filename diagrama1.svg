@@ -1,0 +1,37 @@
+<svg width="1400" height="1200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="sombra" x="0" y="0" width="200%" height="200%">
+<feOffset result="offOut" in="SourceAlpha" dx="3" dy="3" />
+<feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+</filter>
+<marker id="seta_open" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto">
+<path d="M0,0 L0,6 L9,3 z" fill="black" />
+</marker>
+<marker id="seta_heranca" markerWidth="16" markerHeight="16" refX="14" refY="7" orient="auto">
+<path d="M0,0 L14,7 L0,14 L0,0" fill="white" stroke="black" />
+</marker>
+<marker id="seta_agregacao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
+<path d="M0,5 L8,0 L16,5 L8,10 z" fill="white" stroke="black" />
+</marker>
+<marker id="seta_composicao" markerWidth="18" markerHeight="12" refX="16" refY="5" orient="auto">
+<path d="M0,5 L8,0 L16,5 L8,10 z" fill="black" stroke="black" />
+</marker>
+</defs>
+<style>
+.texto { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+.titulo { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: black; }
+.box { fill: #fff; stroke: #333; stroke-width: 1; filter: url(#sombra); }
+.header-box { fill: #f0f0f0; stroke: #333; stroke-width: 1; }
+.linha { stroke: #333; stroke-width: 1.5; }
+.label-bg { fill: white; opacity: 0.9; }
+</style>
+<rect x="590" y="550" width="220" height="100" class="box" />
+<rect x="590" y="550" width="220" height="30" class="header-box" />
+<text x="700" y="570" class="titulo" text-anchor="middle">Pessoa</text>
+<line x1="590" y1="580" x2="810" y2="580" class="linha" />
+<text x="600" y="595" class="texto">- nome : String</text>
+<text x="600" y="610" class="texto">- idade : int</text>
+<line x1="590" y1="620" x2="810" y2="620" class="linha" />
+<text x="600" y="635" class="texto" style="font-style:italic">+ falar() : void</text>
+</svg>

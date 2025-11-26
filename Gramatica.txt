@@ -1,55 +1,33 @@
-Programa -> T_START_UML ListaDeclaracoes T_END_UML
+<Programa> ::= T_START_UML <ListaDeclaracoes> T_END_UML
 
-ListaDeclaracoes -> Declaracao
+<ListaDeclaracoes> ::= <Declaracao> <ListaDeclaracoes> | ε
 
-ListaDeclaracoes -> Declaracao ListaDeclaracoes
+<Declaracao> ::= <DeclaracaoClasse> | <DeclaracaoTitulo> | <DeclaracaoRelacionamento> | T_NEWLINE
 
-Declaracao -> DeclaracaoClasse
+<DeclaracaoTitulo> ::= T_TITLE <TextoTitulo> T_NEWLINE
 
-Declaracao -> DeclaracaoRelacionamento T_NOVA_LINHA
+<TextoTitulo> ::= ID <TextoTitulo> | ε
 
-Declaracao -> T_NOVA_LINHA
+<DeclaracaoClasse> ::= T_CLASS T_ID <CorpoClasseOpcional> T_NEWLINE
 
-DeclaracaoClasse -> T_CLASS T_ID T_ABRE_CHAVE CorpoClasse T_FECHA_CHAVE 
+<CorpoClasseOpcional> ::= T_OPEN_BRACE T_NEWLINE <ListaMembros> T_CLOSE_BRACE | ε
 
-DeclaracaoClasse -> T_CLASS T_ID T_NOVA_LINHA (declaração simples) 
+<ListaMembros> ::= <DeclaracaoMembro> <ListaMembros> | ε
 
-CorpoClasse -> ListaMembros 
+<DeclaracaoMembro> ::= <Visibilidade> T_ID <TipoMembro> T_NEWLINE
 
-CorpoClasse -> VAZIO (permite classe vazia {}) 
+<Visibilidade> ::= T_PUBLIC | T_PRIVATE | T_PROTECTED | T_PACKAGE | ε
 
-ListaMembros -> Membro 
+<TipoMembro> ::= <Metodo> | <Atributo>
 
-ListaMembros -> Membro ListaMembros 
+<Metodo> ::= T_OPEN_PAREN <ListaParametros> T_CLOSE_PAREN <TipoRetorno>
 
-Membro -> Atributo 
+<Atributo> ::= <TipoRetorno> | ε
 
-Membro -> Metodo
+<TipoRetorno> ::= T_COLON T_ID | ε
 
-Atributo -> Visibilidade T_ID T_DOIS_PONTOS Tipo T_NOVA_LINHA (ex: - nome: String) 
+<ListaParametros> ::= ε (Implementação simplificada)
 
-Atributo -> Visibilidade T_ID T_NOVA_LINHA (ex: - nome) 
+<DeclaracaoRelacionamento> ::= T_ID <Operador> T_ID <LabelOpcional> T_NEWLINE
 
-Metodo -> Visibilidade T_ID T_ABRE_PARENTESE ListaParams T_FECHA_PARENTESE OptTipoRetorno T_NOVA_LINHA (ex: + estudar(): void) 
-
-Visibilidade -> T_MAIS | T_MENOS | T_HASH | T_TIL | VAZIO 
-
-Tipo -> T_ID 
-
-OptTipoRetorno -> T_DOIS_PONTOS Tipo 
-
-OptTipoRetorno -> VAZIO 
-
-ListaParams -> VAZIO 
-
-ListaParams -> Parametros 
-
-Parametros -> T_ID T_DOIS_PONTOS Tipo (ex: nome: String) 
-
-Parametros -> Parametros T_VIRGULA Parametros (ex: id: int, nome: String)
-
-DeclaracaoRelacionamento -> T_ID Operador T_ID (ex: Aluno --* Turma) 
-
-DeclaracaoRelacionamento -> T_ID Operador T_ID T_DOIS_PONTOS T_STRING_LITERAL (ex: Aluno "1" --* "*" Turma : "contém") (Nota: Melhorei esta regra, a sintaxe do PlantUML é mais complexa, mas isso é um bom começo) 
-
-Operador -> T_HERANCA | T_IMPLEMENTACAO | T_ASSOCIACAO | T_AGREGACAO | T_COMPOSICAO | T_LINK
+<LabelOpcional> ::= T_COLON <TextoLabel> | ε
