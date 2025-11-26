@@ -59,8 +59,10 @@ O objetivo é automatizar a visualização de diagramas UML a partir de código 
 
 
 Execute o compilador:
+```bash
+   java -cp bin App
+```
 
-java -cp bin App
 
 
 O arquivo diagrama.svg será gerado na raiz do projeto. Abra-o em qualquer navegador web (Chrome, Edge, Firefox) para visualizar o resultado.
